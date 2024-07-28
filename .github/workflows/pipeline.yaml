@@ -5,6 +5,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
     steps:
       - name: Copiar os arquivos do repositorio
         uses: actions/checkout@v4
