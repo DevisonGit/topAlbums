@@ -47,23 +47,13 @@ def test_create_existing_album(client, session):
 
 
 def test_list_albums_should_return_10_albums(client, session):
-    expected_albums = 10
     session.bulk_save_objects(AlbumFactory.create_batch(10))
     session.commit()
 
     response = client.get('/albums/?name=album name')
 
-    assert len(response.json()['Albums']) == expected_albums
-
-
-def test_list_albums_should_return_1_albums(client, session):
-    expected_albums = 1
-    session.bulk_save_objects(AlbumFactory.create_batch(10))
-    session.commit()
-
-    response = client.get('/albums/?year=2015')
-
-    assert len(response.json()['Albums']) == expected_albums
+    assert response.status_code == HTTPStatus.OK
+    assert b'<title>List Albums</title>' in response.content
 
 
 def test_list_albums_no_filter(client):
@@ -73,3 +63,10 @@ def test_list_albums_no_filter(client):
     assert response.json() == {
         'detail': 'At least one filter parameter must be provided.'
     }
+
+
+def test_get_search_form(client):
+    response = client.get('/albums/search')
+
+    assert response.status_code == HTTPStatus.OK
+    assert b'<title>Pagina de Busca</title>' in response.content

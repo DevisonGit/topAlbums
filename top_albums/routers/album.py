@@ -1,9 +1,11 @@
 from http import HTTPStatus
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
+from fastapi.responses import HTMLResponse
 from sqlalchemy import and_, select
 from sqlalchemy.orm import Session
+from starlette.templating import Jinja2Templates
 
 from top_albums.databases.database import get_session
 from top_albums.models.album import Album
@@ -12,6 +14,7 @@ from top_albums.services.filter_service import build_filter
 
 router = APIRouter(prefix='/albums', tags=['album'])
 Session = Annotated[Session, Depends(get_session)]
+templates = Jinja2Templates(directory='templates')
 
 
 @router.post('/', status_code=HTTPStatus.CREATED, response_model=AlbumPublic)
@@ -31,6 +34,7 @@ def create_album(album: AlbumPublic, session: Session):
 
 @router.get('/', response_model=AlbumList)
 def list_albums(  # noqa
+    request: Request,
     session: Session,
     name: str = Query(None),
     artist: str = Query(None),
@@ -49,4 +53,13 @@ def list_albums(  # noqa
     query = select(Album).where(and_(*filters))
     albums = session.scalars(query).all()
 
-    return {'Albums': albums}
+    return templates.TemplateResponse(
+        'index.html', {'request': request, 'albums': albums}
+    )
+
+
+@router.get('/search', response_class=HTMLResponse)
+async def get_search_form(request: Request):
+    return templates.TemplateResponse(
+        'album/search.html', {'request': request}
+    )

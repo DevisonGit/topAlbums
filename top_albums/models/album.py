@@ -12,4 +12,4 @@ class Album:
     artist: Mapped[str]
     label: Mapped[str]
     year: Mapped[int]
-    rating: Mapped[float]
+    rating: Mapped[float] = mapped_column(nullable=True)

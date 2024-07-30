@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagina de Busca</title>
+    <script>
+        function submitForm(event) {
+            var form = event.target;
+            var inputs = form.querySelectorAll('input[type="text"], input[type="number"], input[type="email"], textarea'); // Seleciona todos os campos relevantes
+            inputs.forEach(function(input) {
+                if (input.value.trim() === "") {
+                    input.removeAttribute('name'); // Remove o nome do campo se estiver vazio
+                } else {
+                    input.setAttribute('name', input.dataset.originalName); // Restaura o nome original do campo
+                }
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            var form = document.querySelector('form');
+            var inputs = form.querySelectorAll('input[type="text"], input[type="number"], input[type="email"], textarea');
+            inputs.forEach(function(input) {
+                input.dataset.originalName = input.name; // Armazena o nome original do campo
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Buscar</h1>
+    <form action="/albums" method="get" onsubmit="submitForm(event)">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" placeholder="Album name" >
+        <br>
+        <label for="artist">Artist:</label>
+        <input type="text" id="artist" name="artist" placeholder="Artist name">
+        <br>
+        <label for="label">Label:</label>
+        <input type="text" id="label" name="label" placeholder="Label name">
+        <br>
+        <label for="year">Year:</label>
+        <input type="text" id="year" name="year" placeholder="Year" >
+        <br>
+        <label for="rating">Rating:</label>
+        <input type="text" id="rating" name="rating" placeholder="Rating" >
+        <br>
+        <input type="submit" value="Buscar">
+    </form>
+</body>
+</html>
