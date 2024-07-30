@@ -7,9 +7,9 @@ class AlbumFactory(factory.Factory):
     class Meta:
         model = Album
 
-    id = factory.Sequence(lambda n: n)
+    id = factory.Sequence(lambda n: n + 1)
     name = factory.LazyAttribute(lambda obj: f'album name {obj.id}')
     artist = factory.LazyAttribute(lambda obj: f'artist name {obj.id}')
     label = factory.LazyAttribute(lambda obj: f'label name {obj.id}')
-    year = 2000
-    rating = 10
+    year = factory.Sequence(lambda n: n + 1999)
+    rating = factory.Sequence(lambda n: n)
