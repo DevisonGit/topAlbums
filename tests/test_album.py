@@ -70,3 +70,37 @@ def test_get_search_form(client):
 
     assert response.status_code == HTTPStatus.OK
     assert b'<title>Pagina de Busca</title>' in response.content
+
+
+def test_get_playing_now(client):
+    response = client.get('/albums/playing')
+
+    assert response.status_code == HTTPStatus.OK
+    assert b'<title>Playing</title>' in response.content
+
+
+def test_update_rating_album_invalid(client, session):
+    session.bulk_save_objects(AlbumFactory.create_batch(5))
+    session.commit()
+
+    response = client.post(
+        '/albums/100',
+    )
+
+    assert response.status_code == HTTPStatus.BAD_REQUEST
+    assert response.json() == {'detail': 'Rating must be provided.'}
+
+
+def test_update_rating_album(client, session):
+    session.bulk_save_objects(AlbumFactory.create_batch(5))
+    session.commit()
+
+    response = client.post(
+        '/albums/25',
+        json={
+            'rating': 10,
+        },
+    )
+
+    assert response.status_code == HTTPStatus.OK
+    assert b'<title>Playing</title>' in response.content

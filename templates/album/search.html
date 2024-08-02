@@ -1,9 +1,9 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pagina de Busca</title>
+<!-- templates/home.html -->
+{% extends "base.html" %}
+
+{% block title %}Pagina de Busca{% endblock %}
+
+{% block head %}
     <script>
         function submitForm(event) {
             var form = event.target;
@@ -25,9 +25,11 @@
             });
         });
     </script>
-</head>
-<body>
-    <h1>Buscar</h1>
+{% endblock %}
+
+{% block content %}
+
+    <h1>Search</h1>
     <form action="/albums" method="get" onsubmit="submitForm(event)">
         <label for="name">Name:</label>
         <input type="text" id="name" name="name" placeholder="Album name" >
@@ -46,5 +48,5 @@
         <br>
         <input type="submit" value="Buscar">
     </form>
-</body>
-</html>
+
+{% endblock %}

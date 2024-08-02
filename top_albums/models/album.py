@@ -1,3 +1,4 @@
+from sqlalchemy import Boolean
 from sqlalchemy.orm import Mapped, mapped_column, registry
 
 table_registry = registry()
@@ -13,3 +14,4 @@ class Album:
     label: Mapped[str]
     year: Mapped[int]
     rating: Mapped[float] = mapped_column(nullable=True)
+    playing: Mapped[bool] = mapped_column(Boolean, default=False)

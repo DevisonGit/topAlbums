@@ -12,3 +12,7 @@ class AlbumPublic(BaseModel):
 
 class AlbumList(BaseModel):
     Albums: list[AlbumPublic]
+
+
+class AlbumUpdate(BaseModel):
+    rating: float | None = None

@@ -1,7 +1,7 @@
 from http import HTTPStatus
-from typing import Annotated
+from typing import Annotated, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, Query, Request
+from fastapi import APIRouter, Depends, Form, HTTPException, Query, Request
 from fastapi.responses import HTMLResponse
 from sqlalchemy import and_, select
 from sqlalchemy.orm import Session
@@ -54,7 +54,7 @@ def list_albums(  # noqa
     albums = session.scalars(query).all()
 
     return templates.TemplateResponse(
-        'index.html', {'request': request, 'albums': albums}
+        'album/list.html', {'request': request, 'albums': albums}
     )
 
 
@@ -62,4 +62,48 @@ def list_albums(  # noqa
 async def get_search_form(request: Request):
     return templates.TemplateResponse(
         'album/search.html', {'request': request}
+    )
+
+
+@router.get('/playing', response_model=AlbumList)
+def get_playing_now(request: Request, session: Session):
+    query = select(Album).where(Album.playing)
+    albums = session.scalars(query).all()
+
+    return templates.TemplateResponse(
+        'album/playing.html', {'request': request, 'albums': albums}
+    )
+
+
+@router.post('/{album_id}', response_model=AlbumList)
+def update_rating(
+    request: Request,
+    session: Session,
+    album_id: int,
+    rating: Optional[float] = Form(None),
+):
+    db_album = session.scalar(select(Album).where(Album.id == album_id))
+
+    if not db_album:
+        raise HTTPException(
+            status_code=HTTPStatus.BAD_REQUEST,
+            detail='Rating must be provided.',
+        )
+
+    db_album.playing = False
+    db_album.rating = rating
+
+    session.add(db_album)
+    session.commit()
+    session.refresh(db_album)
+
+    db_next = session.scalar(select(Album).where(Album.id == album_id - 1))
+    db_next.playing = True
+
+    session.add(db_next)
+    session.commit()
+    session.refresh(db_next)
+
+    return templates.TemplateResponse(
+        'album/playing.html', {'request': request, 'albums': [db_next]}
     )
