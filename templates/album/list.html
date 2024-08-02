@@ -1,0 +1,35 @@
+<!-- templates/home.html -->
+{% extends "base.html" %}
+
+{% block title %}List Albums{% endblock %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block content %}
+            <table class="table">
+                <thead>
+                    <tr>
+                      <th scope="col">Raking</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Artist</th>
+                      <th scope="col">Label</th>
+                      <th scope="col">Year</th>
+                      <th scope="col">Rating</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for album in albums %}
+                    <tr>
+                      <th scope="row">{{album.id }}</th>
+                      <td>{{ album.name }}</td>
+                      <td>{{ album.artist }}</td>
+                      <td>{{ album.label }}</td>
+                      <td>{{ album.year }}</td>
+                      <td>{{ album.rating }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+{% endblock %}

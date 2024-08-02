@@ -2,7 +2,7 @@ services:
   top_albums_database:
     image: postgres
     env_file:
-      - .env
+      - .env-dev
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
@@ -13,7 +13,7 @@ services:
     entrypoint: ./entrypoint.sh
     build: .
     env_file:
-      - .env
+      - .env-dev
     ports:
       - "8000:8000"
     depends_on:

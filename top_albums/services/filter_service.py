@@ -7,9 +7,9 @@ def build_filter(name=None, artist=None, label=None, year=None, rating=None):
     if name:
         filters.append(Album.name.ilike(f'%{name}%'))
     if artist:
-        filters.append(Album.name.ilike(f'%{artist}%'))
+        filters.append(Album.artist.ilike(f'%{artist}%'))
     if label:
-        filters.append(Album.name.ilike(f'%{label}%'))
+        filters.append(Album.label.ilike(f'%{label}%'))
     if year is not None:
         filters.append(Album.year == year)
     if rating is not None:

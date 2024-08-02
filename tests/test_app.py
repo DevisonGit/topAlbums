@@ -11,4 +11,4 @@ def test_root_return_ok_end_hello_world():
     response = client.get('/')
 
     assert response.status_code == HTTPStatus.OK
-    assert response.json() == {'message': 'hello world'}
+    assert b'<title>Top Albums</title>' in response.content
